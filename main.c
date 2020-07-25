@@ -1,34 +1,93 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-
-#define NEWLINE ("\n")
-#define FILENAME ("/home/cyborg/Desktop/Student_Information_Management_System/database.txt")
 
 
 
-typedef struct 
+
+
+void printMessageCenter(const char* message)
 {
-    char regNo[100];
-    char student_name[60];
-    char grade[10];
-    char phy[10];
-    char math[10];
-    char chem[10];
-    char econ[10];
-    int percentage;
-} data;
-
-int main()
-{
-    displayMessage();
-    welcomeMessage();
-    ifFileExists(FILENAME);
-    // system("clear");
-    
-    
+    int len =0;
+    int pos = 0;
+    //calculate how many space need to print
+    len = (78 - strlen(message))/2;
+    printf("\t\t\t");
+    for(pos =0 ; pos < len ; pos++)
+    {
+        //print space
+        printf(" ");
+    }
+    //print message
+    printf("%s",message);
 }
+
+void mainMenu()
+{
+    int user_input;
+    // printf("\t\t\tMAIN MENU\n");
+    printf(NEWLINE);
+    headMessage("MAIN MENU");
+    printf("\n\t\t\t01.) RESULT MENU");
+    printf("\n\t\t\t02.) ENTRY/EDIT MENU");
+    printf("\n\t\t\t03.) EXIT");
+    printf("\n\t\t\tPlease Select your Option (1-3): ");
+    scanf("%d", &user_input);
+
+    switch (user_input)
+    {
+    case 1:
+        resultMenu();
+        break;
+    case 2:
+        entryMenu();
+        break;
+    case 3:
+        system("exit");
+    default:
+        mainMenu();
+    }
+}
+
+
+void ifFileExists(const char *FileName)
+{
+    FILE *fp = NULL;
+    fp = fopen(FILENAME, "r+");
+    if(fp == NULL)
+    {
+        printf("File Does not Exist");
+        system("clear");
+        return 0;
+    }
+    else
+    {
+        fp = fopen(FileName, "a+");
+        mainMenu();
+    }
+}
+
+void displayAllStudentRecord()
+{
+    resultMenu();
+}
+void searchStudentRecord(){system("clear");}
+void modifyStudentRecord(){system("clear");}
+void deleteStudentRecord(){system("clear");}
+
+//Head message
+void headMessage(const char *message)
+{
+    system("clear");
+    printf("\t\t\t###########################################################################");
+    printf("\n\t\t\t############                                                   ############");
+    printf("\n\t\t\t############   Student Record Management System Project in C   ############");
+    printf("\n\t\t\t############                                                   ############");
+    printf("\n\t\t\t###########################################################################");
+    printf("\n\t\t\t---------------------------------------------------------------------------\n");
+    printMessageCenter(message);
+    printf("\n\t\t\t----------------------------------------------------------------------------");
+}
+
+
+
 
 void displayMessage()
 {
@@ -61,30 +120,6 @@ void welcomeMessage()
     getchar();
 }
 
-void mainMenu()
-{
-    int user_input;
-    printf("\t\t\tMAIN MENU\n");
-    printf("\n\t\t\t01.) RESULT MENU");
-    printf("\n\t\t\t02.) ENTRY/EDIT MENU");
-    printf("\n\t\t\t03.) EXIT");
-    printf("\n\t\t\tPlease Select your Option (1-3): ");
-    scanf("%d", &user_input);
-
-    switch (user_input)
-    {
-    case 1:
-        resultMenu();
-        break;
-    case 2:
-        entryMenu();
-        break;
-    case 3:
-        return 0;;
-    default:
-        mainMenu();
-    }
-}
 
 void resultMenu()
 {
@@ -108,7 +143,7 @@ void resultMenu()
         printf("%s\n", buff );
         count += sizeof(fp);
     
-   } while (count <= sizeof(data));
+   } while (count <= sizeof(fp) * 3);
    
 
     fgets(buff, 255 , (FILE*)fp);
@@ -135,49 +170,44 @@ void entryMenu()
 
     scanf("%d", &user_input);
 
-    switch(user_input)
+    if(user_input==1 || user_input==2 || user_input==3 || user_input==4 || user_input==5 || user_input==6)
     {
-        case 1:
-            createStudentRecord();
-            break;
-        case 2:
-            displayAllStudentRecord();
-            break;
-        case 3:
-            searchStudentRecord();
-            break;
-        case 4:
-            modifyStudentRecord();
-            break;
-        case 5:
-            deleteStudentRecord();
-            break;
-        case 6:
-            mainMenu();
-            break;
-        default:
-            mainMenu();
+        switch(user_input)
+        {
+            case 1:
+                createStudentRecord();
+                break;
+            case 2:
+                displayAllStudentRecord();
+                break;
+            case 3:
+                searchStudentRecord();
+                break;
+            case 4:
+                modifyStudentRecord();
+                break;
+            case 5:
+                deleteStudentRecord();
+                break;
+            case 6:
+                mainMenu();
+                break;
+            default:
+                mainMenu();
+        }
     }
+    else
+    {
+        system("clear");
+        printf("\n\t\t\tIncorrect Value...\n\n");
+        mainMenu();
+    }
+    
+    
 
     
 }
 
-void ifFileExists(const char *FileName)
-{
-    FILE *fp = NULL;
-    fp = fopen(FILENAME, "r+");
-    if(fp == NULL)
-    {
-        printf("File Does not Exist");
-        system("clear");
-        return 0;
-    }
-    else
-    {
-        fp = fopen(FileName, "a+");
-        mainMenu();
-    }
-}
 
 void createStudentRecord()
 {
@@ -193,8 +223,8 @@ void createStudentRecord()
 
     printf("\n\t\t\t\tEnter Student Name: ");
     scanf("%s", studentData.student_name);
-    
 
+    
     printf("\t\t\t\tEnter Marks in Physics (Out of 100): ");
     scanf("%s", studentData.phy);
     
@@ -227,20 +257,15 @@ void createStudentRecord()
     fclose(fp);
     
 }
-void displayAllStudentRecord()
+
+
+
+int main()
 {
-    FILE *fp = NULL;
-    fp = fopen(FILENAME, "r");
-    system("clear");
-    char buff[ 100 ];
-    fp = fopen(FILENAME,"r");
-    fgets(buff, 255 , (FILE*)fp);
-    printf("%s\n", buff );
+    displayMessage();
+    welcomeMessage();
+    ifFileExists(FILENAME);
+    // system("clear");
     
-    printf("\n\n\t\t\tPress any key to go to main menu.....");
-    getchar();
-    mainMenu();
+    
 }
-void searchStudentRecord(){system("clear");}
-void modifyStudentRecord(){system("clear");}
-void deleteStudentRecord(){system("clear");}
